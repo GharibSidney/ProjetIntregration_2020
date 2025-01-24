@@ -1,0 +1,134 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.Paiements
+@using ProjetIntegrationEquipe2.Models
+@using System.Globalization;
+
+@model ListePaiementsRefuseVM
+
+    <h2 class="text-center pb-3 m-1"> Liste des paiements refusés</h2>
+
+        @*Rechercher*@
+        @using (Html.BeginForm("ListePaiementsRefuse", "Paiements", FormMethod.Get))
+        {
+            <b class="ml-2">@Html.Label("Rechercher par :")</b>
+            <br />
+
+    @Html.RadioButton("rechercherPar", "Tuteur", new { @class = "ml-2", @checked = true })
+    @Html.Label("Nom du tuteur", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "Tutore", new { @class = "ml-2" })
+    @Html.Label("Nom du tutoré", new { @class = "ml-1" })
+
+    @Html.RadioButton("rechercherPar", "PlageHoraire", new { @class = "ml-2", @id = "rechercherDate", onclick = "invisibilite()" })
+    @Html.Label("Plage Horaire", new { @class = "ml-1" })
+    @Html.TextBox("rechercher", "", new { @class = "ml-2 mb-2 form-control width30", @id = "rechercherTextRechercher" })
+
+    <div id="champDate" class="form-inline invisible">
+        @Html.Label("Date de début", new { @class = "ml-2" })
+        @Html.TextBox("dateDebut", null, new { @class = "ml-2 form-control w-25 datetimepicker" })
+        @Html.Label("Date de fin", new { @class = "ml-2" })
+        @Html.TextBox("dateFin", null, new { @class = "ml-2 form-control w-25 datetimepicker" })
+    </div>
+
+    <input type="submit" value="Rechercher" class="btn btn-primary m-2" />
+}
+
+<div class="table-responsive-lg ml-2">
+    <table id="myTable" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center no-sort" scope="col">Nom du Tuteur</th>
+                <th class="text-center no-sort" scope="col">Nom du Tutoré</th>
+                <th class="text-center no-sort" scope="col">Plages Horaires</th>
+                <th class="text-center no-sort" scope="col">Nombre d'heures</th>
+                <th class="text-center" scope="col">Prix Total</th>
+            </tr>
+        </thead>
+
+                <tbody>
+                    @if (Model.ListeTutorats.Count() == 0)
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">Il n'y a pas de paiement refusé à gérer en ce moment</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (Tutorat tutorat in Model.ListeTutorats)
+                        {
+                            <tr class="text-center">
+                                <td>@tutorat.Tuteur.Prenom @tutorat.Tuteur.Nom</td>
+                                <td>@tutorat.Tutore.Prenom @tutorat.Tutore.Nom</td>
+                                <td>
+                                    @foreach (PlageHoraire plage in tutorat.ListePlageHoraire)
+                                    {
+                                        <p>
+                                            @plage.DateHeureDebut.ToString("d MMMM HH:mm", new CultureInfo("fr")) jusqu'au
+                                            @plage.DateHeureFin.ToString("d MMMM HH:mm", new CultureInfo("fr"))
+                                        </p>
+                                    }
+                                </td>
+                                <td>@tutorat.NombreHeureTotal h</td>
+                                <td>@tutorat.PrixTotal $</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+<a href="~/Home/Index" class="btn btn-primary btn-lg ml-2">Retour à l'accueil</a>
+
+
+
+@section css {
+    @*DateTimePicker*@
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" integrity="sha512-LT9fy1J8pE4Cy6ijbg96UkExgOjCqcxAC7xsnv+mLJxSvftGVmmc236jlPTZXPcBRQcVOWoK1IJhb1dAjtb4lQ==" crossorigin="anonymous" />
+    @* css pour datatables. Different du lien de base, celui-ci utilise les classes bootstrap au lieu du css datatables *@
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*DateTimePicker*@
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js" integrity="sha512-s5u/JBtkPg+Ff2WEr49/cJsod95UgLHbC00N/GglqdQuLnYhALncz8ZHiW/LxDRGduijLKzeYb7Aal9h3codZA==" crossorigin="anonymous"></script>
+
+    <script>
+        $('.datetimepicker').datetimepicker({
+            controlType: 'select',
+            oneLine: true,
+            timeFormat: 'HH:mm',
+            prevText: "Précédent",
+            nextText: "Suivant",
+            timeText: "Temps",
+            currentText: "Aujourd'hui",
+            closeText: "Fermer",
+            dayNamesMin: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+            monthNames: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+        });
+    </script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @* script pour datatables *@
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                //Choix d'options
+                "paging": false,
+                "searching": false,
+                "info": false,
+                //ordering == orderby
+                "ordering": true,
+                //Methode qui active les classes "no-sort" (donc les colonnes avec la classe ne sont pas orderable)
+                "columnDefs": [{
+                    "orderable": false,
+                    targets: "no-sort"
+                }]
+            });
+        });
+    </script>
+    <script src="~/Scripts/DateRechercherInvisible.js"></script>
+}

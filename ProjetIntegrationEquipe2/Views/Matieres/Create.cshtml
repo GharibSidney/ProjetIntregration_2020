@@ -1,0 +1,34 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.Matieres
+@model MatieresCreateVM
+
+<h2 class="text-center m-3">Créer une matière</h2>
+
+@using (Html.BeginForm("Create", "Matieres", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken();
+    <div>
+        @Html.ValidationSummary()
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput">
+        @Html.LabelFor(m => m.Nom, new { @class = "col-md-2 control-label font-weight-bold enleverPadding uneLigneFonctionnel" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Nom, new { @class = "form-control w-75" }) 
+            @Html.ValidationMessageFor(m => m.Nom)
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary m-1">Soumettre</button>
+    </div>
+}
+
+<div class="text-center">
+    <a href="../../Home/Index" class="btn btn-primary m-1">Retour à l'accueil</a>
+</div>
+
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+}

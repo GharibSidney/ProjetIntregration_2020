@@ -1,0 +1,115 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.Commentaires
+@model CommentairesCreateVM
+
+<h2 class="text-center m-3">Créer un commentaire</h2>
+@if (Model.ListeTuteurs.Count() == 0)
+{
+    <p class="text-center pt-5">Vous devez avoir recu du tutorat pour donner un commentaire</p>
+}
+else
+{
+    using (Html.BeginForm("Create", "Commentaires", FormMethod.Post, new { onsubmit = "return VerificationCote()" }))
+    {
+        @Html.AntiForgeryToken();
+
+        <div class="form-group d-flex justify-content-center groupeInput">
+            <div class="col-md-10">
+                @Html.LabelFor(m => m.Titre, new { @class = "col-md-2 control-label font-weight-bold" })
+                    @Html.TextBoxFor(m => m.Titre, new { id = "titre", @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Titre)
+            </div>
+        </div>
+
+        <div class="form-group d-flex justify-content-center groupeInput">
+            <div class="col-md-10">
+                @Html.LabelFor(m => m.Tuteur, new { @class = "col-md-2 control-label font-weight-bold" })
+                @Html.DropDownListFor(m => m.IdTuteur, Model.ListeTuteurs.Select(x => new SelectListItem
+           {
+               Text = x.Prenom + " " + x.Nom + " " + x.Email,
+               Value = x.Id
+           }), "Choisir le tuteur", new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.IdTuteur)
+            </div>
+        </div>
+
+        <div class="form-group d-flex justify-content-center groupeInput">
+            <div class="col-md-10">
+                <label><b>&nbsp;&nbsp;&nbsp;*Cote</b></label>
+                <div onmouseout="CoteSelected()">
+                    <span id="span1" onmouseout="CoteOut(1)" onmouseover="CoteOver(1)" onclick="CoteClick(1)" class="fa fa-star-o" style="font-size:50px"></span>
+                    <span id="span2" onmouseout="CoteOut(2)" onmouseover="CoteOver(2)" onclick="CoteClick(2)" class="fa fa-star-o" style="font-size:50px"></span>
+                    <span id="span3" onmouseout="CoteOut(3)" onmouseover="CoteOver(3)" onclick="CoteClick(3)" class="fa fa-star-o" style="font-size:50px"></span>
+                    <span id="span4" onmouseout="CoteOut(4)" onmouseover="CoteOver(4)" onclick="CoteClick(4)" class="fa fa-star-o" style="font-size:50px"></span>
+                    <span id="span5" onmouseout="CoteOut(5)" onmouseover="CoteOver(5)" onclick="CoteClick(5)" class="fa fa-star-o" style="font-size:50px"></span>
+                </div>
+            </div>
+        </div>
+
+        //Le input hidden sert à prendre la valeur des étoiles sélectionnées entre 0 et 5 par le value="X" !
+        //Le binding name="Cote" permet d'enregistrer la cote dans la BD selon la valeur donnée pas value="X" !
+        <div>
+            <input type="hidden" name="Cote" id="valeurEtoiles" value="0" />
+        </div>
+
+        <div class="form-group d-flex justify-content-center groupeInput">
+            <div class="col-md-10">
+                @Html.LabelFor(m => m.Texte, new { @class = "col-md-2 control-label font-weight-bold" })
+                @Html.TextAreaFor(m => m.Texte, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Texte)
+            </div>
+        </div>
+
+        <div>
+            @Html.ValidationSummary()
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary m-3">Soumettre</button>
+            <a href="../../Home/Index" class="btn btn-primary m-3">Retour à l'accueil</a>
+        </div>
+    }
+}
+
+@section scripts {
+    <script type="text/javascript">
+        function CoteOut(numeroEtoile) {
+            for (var i = 1; i <= numeroEtoile; i++) {
+                $("#span" + i).attr('class', 'fa fa-star-o');
+            }
+        }
+
+        function CoteOver(numeroEtoile) {
+            for (var i = 1; i <= numeroEtoile; i++) {
+                $("#span" + i).attr('class', 'fa fa-star checked');
+            }
+        }
+
+        function CoteClick(numeroEtoile) {
+            $("#valeurEtoiles").val(numeroEtoile);
+
+            //Changer la sélection des étoiles !
+            //Le + 1 est seulement pour mettre les étoiles suivantes du clique en noir, soit non-sélectionnées !
+            for (var i = numeroEtoile + 1; i <= 5; i++) {
+                $("#span" + i).attr('class', 'fa fa-star-o');
+            }
+        }
+
+        function CoteSelected() {
+            var cote = $("#valeurEtoiles").val();
+            for (var i = 1; i <= cote; i++) {
+                $("#span" + i).attr('class', 'fa fa-star checked');
+            }
+        }
+
+        function VerificationCote() {
+            var cote = $("#valeurEtoiles").val();
+            if (cote == "0") {
+                alert("Veuillez entrer une cote !");
+                return false;
+            }
+        }
+    </script>
+}
+
+@section css {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+}

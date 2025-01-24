@@ -1,0 +1,74 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.AjouterCours
+@using ProjetIntegrationEquipe2.Models
+@model AjouterCoursIndexVM
+
+<h2 class="text-center m-1">Gérer les cours</h2>
+
+@Html.ActionLink("Ajouter un cours", "Create", "AjouterCours", null, new { @class = "btn btn-primary m-2", role = "button" })
+
+@*Rechercher*@
+@using (Html.BeginForm("Index", "AjouterCours", FormMethod.Get))
+{
+    <b class="ml-2">@Html.Label("Rechercher par :")</b>
+    <br />
+
+    @Html.RadioButton("rechercherPar", "Matiere", new { @class = "ml-2", @checked = true })
+    @Html.Label("Matiere", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "NumeroCours", new { @class = "ml-2" })
+    @Html.Label("Numéro de cours", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "Nom", new { @class = "ml-2" })
+    @Html.Label("Cours", new { @class = "ml-1" })
+    @Html.TextBox("rechercher", "", new { @class = "ml-2 form-control w-25" })
+    <input type="submit" value="Rechercher" class="btn btn-primary m-2" />
+}
+
+
+<div class="table-responsive-lg justify-content-center d-flex ml-1">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Numéro du cours</th>
+                <th class="text-center" scope="col">Nom du cours</th>
+                <th class="text-center" scope="col">Matière</th>
+                <th class="text-center" scope="col">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.CoursList.Count() == 0 || Model.CoursList == null)
+            {
+                <tr class="text-center pt-5">
+                    <td colspan="4" class="text-center">Aucun cours n'à été trouvé</td>
+                </tr>
+            }
+            else
+            {
+                foreach (Cours cours in Model.CoursList)
+                {
+                    <tr>
+                        <td class="text-center">@cours.NumeroCours</td>
+                        <td class="text-center">@cours.Nom</td>
+                        <td class="text-center">@cours.Matiere.Nom</td>
+                        <td class="text-center d-block">
+                            @Html.ActionLink("Modifier", "Edit", "AjouterCours",
+                            new { Id = cours.CoursId }, new { @class = "btn btn-primary btn-sm btnModifier d-inline", role = "button" })
+                            @using (Html.BeginForm("Delete/" + cours.CoursId, "AjouterCours", FormMethod.Post, new { @class = "d-inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Voulez vous vraiment supprimer @(cours.Nom)?');">Supprimer</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<a href="~/Home/Index" class="btn btn-primary btn-lg ml-1">Retour à l'accueil</a>
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+}

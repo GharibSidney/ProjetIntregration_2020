@@ -1,0 +1,107 @@
+﻿@using ProjetIntegrationEquipe2.Models
+@using ProjetIntegrationEquipe2.ViewModels
+
+@model TuteursIndexVM
+
+<h2 class="text-center m-1">Gérer les tuteurs</h2>
+
+@Html.ActionLink("Créer", "Create", "Tuteurs", null, new { @class = "btn btn-primary m-2", role = "button" })
+
+@Html.ValidationSummary()
+
+@*Rechercher*@
+@using (Html.BeginForm("Index", "Tuteurs", FormMethod.Get))
+{
+    <b class="ml-2">@Html.Label("Rechercher par :")</b>
+    <br />
+
+    @Html.RadioButton("rechercherPar", "Nom", new { @class = "ml-2", @checked = true })
+    @Html.Label("Nom", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "Cote", new { @class = "ml-2" })
+    @Html.Label("Cote", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "Courriel", new { @class = "ml-2" })
+    @Html.Label("Courriel", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "CoursMaitrises", new { @class = "ml-2" })
+    @Html.Label("Cours Maîtrisé", new { @class = "ml-1" })
+
+    @Html.TextBox("rechercher", "", new { @class = "ml-2 form-control w-25" })
+    <input type="submit" value="Rechercher" class="btn btn-primary m-2" />
+}
+
+
+<div class="table-responsive-lg ml-1">
+    <table id="myTable" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center no-sort" scope="col">Nom</th>
+                <th class="text-center" scope="col">Cote</th>
+                <th class="text-center no-sort" scope="col">Courriel</th>
+                <th class="text-center no-sort" scope="col">Cours Maîtrisé(s)</th>
+                <th class="text-center no-sort" scope="col">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (Tuteur tuteur in Model.listeTuteursVM)
+            {
+                <tr class="text-center">
+                    <td>@tuteur.Prenom @tuteur.Nom</td>
+                    <td>@tuteur.CoteTotal</td>
+                    <td>@tuteur.Email</td>
+                    <td>
+                        @foreach (CoursMaitrise coursMaitrise in Model.listeCoursMaitriseVM)
+                        {
+                            if (tuteur.Id == coursMaitrise.TuteurId)
+                            {
+                                <p>@coursMaitrise.Cours.Nom - @coursMaitrise.Cours.NumeroCours</p>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Modifier", "Edit", "Tuteurs", new { id = tuteur.Id },
+                       new { @class = " btn-primary btn-sm btnModifier", role = "button" })
+                        @Html.ActionLink("Profil tuteur", "Profil", "Tuteurs",
+                       new { Id = tuteur.Id }, new { @class = "btn btn-primary btn-sm", role = "button" })
+
+                        @using (Html.BeginForm("Delete/" + tuteur.Id, "Tuteurs", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger btn-sm m-1" onclick="return confirm('Voulez-vous vraiment supprimer @(tuteur.Prenom) ?')">Supprimer</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<a href="~/Home/Index" class="btn btn-primary btn-lg m-1">Retour à l'accueil</a>
+
+@section css{
+    @* css pour datatables. Different du lien de base, celui-ci utilise les classes bootstrap au lieu du css datatables *@
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @* script pour datatables *@
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                //Choix d'options
+                "paging": false,
+                "searching": false,
+                "info": false,
+                //ordering == orderby
+                "ordering": true,
+                //Methode qui active les classes "no-sort" (donc les colonnes avec la classe ne sont pas orderable)
+                "columnDefs": [{
+                    "orderable": false,
+                    targets: "no-sort"
+                }]
+            });
+        });
+    </script>
+}

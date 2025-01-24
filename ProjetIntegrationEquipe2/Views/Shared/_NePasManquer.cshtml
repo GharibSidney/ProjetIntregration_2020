@@ -1,0 +1,76 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels
+@using ProjetIntegrationEquipe2.Models
+@using Microsoft.AspNet.Identity
+@model List<PromotionInfoVM>
+
+<h1 class="text-center m-5">Promotions actives</h1>
+@if (User.IsInRole(RolesNames­.Administrateur))
+{
+    @Html.ActionLink("Créer une promotion", "CreerPromotion", "Home", null, new { @class = "btn btn-primary btn-lg ml-2", role = "button" })
+}
+<div class="row">
+    @if (Model.Count() > 0)
+    {
+        foreach (PromotionInfoVM item in Model)
+        {
+            <div class="card mb-3 m-3" style="max-width: 540px;" id="@item.PromotionId">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        @if (item.CheminImage != null)
+                        {
+                            <img src="@Url.Content(item.CheminImage)" class="card-img" alt="...">
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Titre</h5>
+                            <p class="card-text">@item.Description</p>
+                            @if (User.IsInRole(RolesNames.Administrateur))
+                            {
+                                @Html.ActionLink("Modifier", "EditPromotion", "Home", new { Id = item.PromotionId }, new { @class = "btn btn-primary btn-sm m-1", role = "button" })
+                                <button type="submit" class="btn btn-danger btn-sm m-1" href="#" onclick="Delete(@item.PromotionId)">Supprimer</button>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+      
+
+    }
+    else
+    {
+        <p> Il n'y a aucune promotion active en ce moment. Revenez plus tard!</p>
+    }
+
+
+</div>
+    <script>
+
+    //Dès que le delete est confirmé, la donnée est supprimée à l'aide de cette fonction
+    function Delete(DeleteId)
+    {
+        //ramasse le ID de la ligne à supprimer
+        var row = document.getElementById(DeleteId);
+
+        $.ajax({
+            url: '@Url.Action("DeletePromotion", "Home")/' + DeleteId,
+            type: "POST",
+            data: DeleteId,
+
+
+            }).done(function() {
+
+            //supprime la ligne
+                row.remove();
+
+
+            }).fail(function() {
+                alert("Je suis appellé, mais ne marche pas!");
+            });
+
+    }
+
+
+    </script>

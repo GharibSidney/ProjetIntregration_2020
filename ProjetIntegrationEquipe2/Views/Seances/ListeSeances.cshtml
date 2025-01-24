@@ -1,0 +1,110 @@
+﻿@using Microsoft.AspNet.Identity
+@using ProjetIntegrationEquipe2.Models
+@using System.Globalization;
+@using ProjetIntegrationEquipe2.ViewModels.Seances
+@model ListeSeanceVM
+
+
+<h2 class="text-center m-1">Liste des séances de tutorat</h2>
+
+@*Rechercher*@
+@using (Html.BeginForm("ListeSeances", "Seances", FormMethod.Get))
+{
+    <b class="ml-2">@Html.Label("Rechercher par :")</b>
+    <br />
+
+    @Html.RadioButton("rechercherPar", "Tuteur", new { @class = "ml-2", @checked = true })
+    @Html.Label("Tuteur", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "Tutore", new { @class = "ml-2" })
+    @Html.Label("Tutoré", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "PlageHoraire", new { @class = "ml-2", @id = "rechercherDate", onclick = "invisibilite()" })
+    @Html.Label("Plage Horaire", new { @class = "ml-1" })
+    @Html.TextBox("rechercher", "", new { @class = "ml-2 mb-2 form-control width30", @id = "rechercherTextRechercher" })
+
+    <div id="champDate" class="form-inline invisible">
+        @Html.Label("Date de début", new { @class = "ml-2" })
+        @Html.TextBox("dateDebut", null, new { @class = "ml-2 form-control w-25 datetimepicker" })
+        @Html.Label("Date de fin", new { @class = "ml-2" })
+        @Html.TextBox("dateFin", null, new { @class = "ml-2 form-control w-25 datetimepicker" })
+    </div>
+
+    <input type="submit" value="Rechercher" class="btn btn-primary m-2" />
+}
+
+<div class="table-responsive-lg ml-1">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Nom du Tuteur</th>
+                <th class="text-center" scope="col">Plages Horaires</th>
+                <th class="text-center" scope="col">Nom du Tutoré</th>
+                <th class="text-center" scope="col">Heures</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.listeTutorats.Count() == 0)
+            {
+                <tr>
+                    <td colspan="4" class="text-center">Il n'y a pas de séance en ce moment</td>
+                </tr>
+            }
+            else
+            {
+                foreach (Tutorat tutorat in Model.listeTutorats)
+                {
+                    <tr class="text-center">
+                        <td>@tutorat.Tuteur.Prenom @tutorat.Tuteur.Nom</td>
+                        <td>
+                            @foreach (PlageHoraire plage in tutorat.ListePlageHoraire)
+                            {
+                                <p>
+                                    @plage.DateHeureDebut.ToString("d MMMM HH:mm", new CultureInfo("fr")) jusqu'au
+                                    @plage.DateHeureFin.ToString("d MMMM HH:mm", new CultureInfo("fr"))
+                                </p>
+                            }
+                        </td>
+                        <td>@tutorat.Tutore.Prenom @tutorat.Tutore.Nom</td>
+                        <td>
+                            @tutorat.NombreHeureTotal
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<a href="~/Home/Index" class="btn btn-primary btn-lg ml-2">Retour à l'accueil</a>
+
+@section css {
+    @*DateTimePicker*@
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" integrity="sha512-LT9fy1J8pE4Cy6ijbg96UkExgOjCqcxAC7xsnv+mLJxSvftGVmmc236jlPTZXPcBRQcVOWoK1IJhb1dAjtb4lQ==" crossorigin="anonymous" />
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*DateTimePicker*@
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js" integrity="sha512-s5u/JBtkPg+Ff2WEr49/cJsod95UgLHbC00N/GglqdQuLnYhALncz8ZHiW/LxDRGduijLKzeYb7Aal9h3codZA==" crossorigin="anonymous"></script>
+
+    <script>
+        $('.datetimepicker').datetimepicker({
+            controlType: 'select',
+            oneLine: true,
+            timeFormat: 'HH:mm',
+            prevText: "Précédent",
+            nextText: "Suivant",
+            timeText: "Temps",
+            currentText: "Aujourd'hui",
+            closeText: "Fermer",
+            dayNamesMin: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+            monthNames: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+        });
+    </script>
+
+    @*Pour les dates*@
+    <script src="~/Scripts/DateRechercherInvisible.js"></script>
+}

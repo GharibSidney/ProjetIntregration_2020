@@ -1,0 +1,24 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.Statistiques
+@model StatsPaiementsVM
+
+<h2 class="text-center m-4">Statistiques sur les paiements</h2>
+
+<ul class="margeStats marginL25 list-group w-50">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        Nombre de paiements complets :
+        <span class="badge badge-success badge-pill">@Model.nbPaiementsValides</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        Nombre de paiements refusés :
+        <span class="badge badge-danger badge-pill">@Model.nbPaiementsRefuses</span>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        Nombre de paiements en attente :
+        <span class="badge badge-warning badge-pill">@Model.nbPaiementsAttente</span>
+    </li>
+
+</ul>
+
+<div class="marginL38 margeStats">
+    <a href="~/Home/Index" class="btn btn-primary btn-lg m-1">Retour à l'accueil</a>
+</div>

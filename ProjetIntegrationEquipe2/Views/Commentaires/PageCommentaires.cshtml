@@ -1,0 +1,68 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.Commentaires
+@using ProjetIntegrationEquipe2.Models
+@using System.Globalization;
+@using Microsoft.AspNet.Identity
+@model CommentairesTuteurVM
+<h2 class="text-center m-1">Voir les commentaires concernant @Model.Prenom @Model.Nom</h2>
+
+@using (Html.BeginForm("PageCommentaires", "Commentaires", FormMethod.Get))
+    {
+        <b class="ml-2">@Html.Label("Rechercher par :")</b>
+        <br />
+
+        @Html.RadioButton("rechercherPar", "Nom", new { @class = "ml-2", @checked = true })
+        @Html.Label("Nom du tutoré", new { @class = "ml-1" })
+        @Html.RadioButton("rechercherPar", "Titre", new { @class = "ml-2"})
+        @Html.Label("Titre", new { @class = "ml-1" })
+        @Html.RadioButton("rechercherPar", "Cote", new { @class = "ml-2" })
+        @Html.Label("Cote", new { @class = "ml-1" })
+        @Html.TextBox("rechercher", "", new { @class = "ml-2 form-control w-25" })
+
+        <input type="submit" value="Rechercher" class="btn btn-primary m-2" />
+    }
+
+@if (Model.ListeCommentaires.Count() == 0)
+{
+    <h3 class="text-center pt-1">Il n'y a pas de commentaire</h3>
+}
+else
+{
+
+    foreach (Commentaire commentaire in Model.ListeCommentaires)
+    {
+        <table class="ml-5 offset-1">
+            <tr>
+                <td>
+                    <h3>@commentaire.Titre</h3>
+                </td>
+            </tr>
+            <tr>
+                <td><b>@commentaire.Tutore.Prenom @commentaire.Tutore.Nom</b></td>
+            </tr>
+            <tr>
+                <td>
+                    @for (double i = 0; i < commentaire.Cote; i++)
+                    {
+                        <span class="fa fa-star checked" style="font-size:25px"></span>
+                    }
+                    @for (double i = commentaire.Cote; i < 5; i++)
+                    {
+                        <span class="fa fa-star-o" style="font-size:25px"></span>
+                    }
+                </td>
+            </tr>
+        </table>
+        <div class="offset-8"><b>@commentaire.Date.ToString("d MMMM yyyy", new CultureInfo("fr"))</b></div>
+        <div class="input-group ml-5 w-75">
+            <div class="input-group-prepend">
+            </div>
+            <textarea class="form-control" readonly aria-label="With textarea">@commentaire.CommentaireTexte</textarea>
+        </div>
+    }
+}
+
+
+
+@section css {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+}

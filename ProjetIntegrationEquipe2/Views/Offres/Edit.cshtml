@@ -1,0 +1,125 @@
+﻿@using ProjetIntegrationEquipe2.Models
+@using ProjetIntegrationEquipe2.ViewModels.Offres
+
+@model ProjetIntegrationEquipe2.ViewModels.Offres.EditOffreVM
+
+<h2 class="text-center m-1">Formulaire de modification d'une offre</h2>
+
+@using (Html.BeginForm("Edit", "Offres", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+
+    @Html.HiddenFor(m => m.Id);
+
+    <div class="form-group d-flex justify-content-center groupeInput w-75">
+        @Html.LabelFor(m => m.Titre, new { @class = "col-md-2 control-label font-weight-bold mr-5" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Titre, new { @class = "form-control" })
+            @Html.ValidationMessageFor(c => c.Titre)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput w-75">
+        @Html.LabelFor(m => m.ListeCoursSelectionnesId, new { @class = "col-md-2 control-label font-weight-bold mr-5 uneLigneFonctionnel" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.ListeCoursSelectionnesId, Model.ListeCoursMaitrises.Select(x => new SelectListItem
+            {
+                Text = x.Cours.Nom + " - " + x.Cours.NumeroCours,
+                Value = x.Cours.CoursId.ToString()
+            }), new { @class = "form-control chosen-select coursSelectionnes", @multiple = "true" })
+            @Html.ValidationMessageFor(c => c.ListeCoursSelectionnesId)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput w-75">
+        @Html.Label("Cours déjà offert(s)", new { @class = "col-md-2 control-label font-weight-bold enleverPadding uneLigneFonctionnel petitMargin mr-5" })
+        <div id="coursDejaOfferts" class="col-md-10">
+            <ul class="bg-light">
+                @for (int compteurCoursOfferts = 0; compteurCoursOfferts < Model.ListeCoursOfferts.Count(); compteurCoursOfferts++)
+                {
+                    //On doit mettre un compteur dans le id, car on veut rendre les "checkbox" unique, sinon seulement le premier fonctionne !
+                    //Le id doit correspondre au paramètre de la fonction "DeleteConfirm", afin d'être liés ensemble !
+                    //Donc, le id => id="@compteurCoursOfferts" !
+                    //Puis, le paramètre de la fonction "DeleteConfirm" => onclick="return DeleteConfirm(@compteurCoursOfferts)" !
+                    <li>
+                        <input type="checkbox"
+                               id="@compteurCoursOfferts"
+                               @*Le Binding se fait par la propriété "name" qui est lié à la propriété "ListeCoursMaitrisesId" du VM !
+                                   (elle est utilisé lors de l'enregistrement par la méthode "concat") !
+                                   Pas besoin d'un compteur, car chaque "checkbox" est indépendant !*@
+                               name="ListeCoursMaitrisesId"
+                               value="@Model.ListeCoursOfferts[compteurCoursOfferts].CoursId"
+                               checked="checked"
+                               onclick="return DeleteConfirm(@compteurCoursOfferts)" />
+                        <label id="@Model.ListeCoursOfferts[compteurCoursOfferts].CoursId">@Model.ListeCoursOfferts[compteurCoursOfferts].Nom - @Model.ListeCoursOfferts[compteurCoursOfferts].NumeroCours</label>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <button type="button" class="boutonAjoutPlageHoraire btn bg-success" onclick="AddDP()">Ajouter une plage horaire</button>
+
+    <div class="field-validation-error">
+        @Html.ValidationSummary()
+    </div>
+
+    @Html.Partial("_PlageHoraire", Model)
+
+    <div class="text-center p-2 m-4">
+        <button type="submit" class="btn btn-primary">Soumettre</button>
+    </div>
+}
+
+@section css {
+    @*MultiSelect*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" integrity="sha512-yVvxUQV0QESBt1SyZbNJMAwyKvFTLMyXSyBHDO4BG5t7k/Lw34tyqlSDlKIrIENIzCl+RVUNjmCPG+V/GMesRw==" crossorigin="anonymous" />
+
+    @*DateTimePicker*@
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" integrity="sha512-LT9fy1J8pE4Cy6ijbg96UkExgOjCqcxAC7xsnv+mLJxSvftGVmmc236jlPTZXPcBRQcVOWoK1IJhb1dAjtb4lQ==" crossorigin="anonymous" />
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*MultiSelect*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g==" crossorigin="anonymous"></script>
+
+    <script>
+        //Transformer le DropDownList des cours en "chosen" (on s'abonne à l'événement "chosen") !
+        $(".coursSelectionnes").chosen({
+            placeholder_text_multiple: "Veuillez sélectionner un ou des cours maîtrisés",
+            no_results_text: "Désolé, il n'y a aucun cours correspondant à la recherche :"
+        });
+    </script>
+
+    @*DateTimePicker*@
+    <script src="~/Scripts/AjoutPlageHoraire.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js" integrity="sha512-s5u/JBtkPg+Ff2WEr49/cJsod95UgLHbC00N/GglqdQuLnYhALncz8ZHiW/LxDRGduijLKzeYb7Aal9h3codZA==" crossorigin="anonymous"></script>
+
+    @*Validation de la suppression sur un "checkbox" !*@
+    <script>
+        function DeleteConfirm(compteur) {
+
+            //Récupérer le "checkbox" selon son id, qui est le même que le paramètre de la fonction "DeleteConfirm" (compteur), afin d'être liés ensemble !
+            //De plus, on doit avoir le id = compteur, car on récupère le "checkbox" selon son id, mais on a accès uniquement au compteur !
+            var checkbox = document.getElementById(compteur);
+
+            if (checkbox.checked == false) {
+                if (confirm("Si vous décochez cette case, le cours offert pour cette offre sera supprimé !"))
+                    return true;
+                else
+                    return false;
+            }
+            else if (checkbox.checked == true) {
+                if (confirm("Si vous recochez cette case, le cours offert pour cette offre ne sera plus supprimé !"))
+                    return true;
+                else
+                    return false;
+            }
+        }
+    </script>
+}

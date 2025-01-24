@@ -1,0 +1,28 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.Paiements
+@model RefusPaiementVM
+@Html.HiddenFor(p=>p.PaiementId)
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @Styles.Render("~/Content/css")
+
+</head>
+<body>
+    <div class="jumbotron noBackground jumbotron-fluid">
+        <img id="imgValide" class="mx-auto d-block" src="~/upload/Images/Succes.png" />
+        <p class="tailleRefus display-4 mt-4 text-center">Votre refus de paiement a bel et bien été enregistré!</p>
+        @if (Model.NombreRefus == 1)
+        {
+            <p class="text-center">Vous avez @Model.NombreRefus refus de paiement enregistré pour ce tutorat.</p>
+        }
+        @if (Model.NombreRefus == 2)
+        {
+    <p class="text-center">
+        Vous avez @Model.NombreRefus refus de paiement enregistrés pour ce tutorat. Veuillez contacter
+        le Carrefour de la Réussite à carrefour@("@cegepgranby.qc.ca").
+    </p>
+        }
+        <a class="btn btn-primary mt-5 btn-lg mx-auto d-block w-50" href="~/Home/Index" role="button">Retour à l'accueil</a>
+    </div>
+</body>

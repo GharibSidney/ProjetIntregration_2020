@@ -1,0 +1,233 @@
+﻿@using ProjetIntegrationEquipe2.Models
+@using ProjetIntegrationEquipe2.ViewModels.Tuteurs
+
+@model ProjetIntegrationEquipe2.ViewModels.Tuteurs.CreateTuteurVM
+
+<h2 class="text-center pb-3 m-1">Formulaire de création d'un tuteur</h2>
+
+@using (Html.BeginForm("Create", "Tuteurs", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+
+    <div class="form-group groupeInput mb-5">
+        @Html.LabelFor(m => m.CheminPhoto, new { @class = "col-md-4 font-weight-bold control-label" })
+        <div class="col-md-10">
+            <img src="@Url.Content("~/upload/Image/default.png")" id="imagePreview" />
+            <input type="file" id="ImageFile" name="ImageFile" style="display: none;" accept="image/x-png,image/gif,image/jpeg" onchange="ApercuImage(this, document.getElementById('imagePreview'));" />
+            <input type="button" value="Parcourir" onclick="document.getElementById('ImageFile').click();" />
+            @Html.ValidationMessageFor(m => m.ImageFile)
+            @Html.ValidationMessage("ImageSizeError")
+
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput ">
+        @Html.LabelFor(m => m.Prenom, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Prenom, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(m => m.Prenom)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput ">
+        @Html.LabelFor(m => m.Nom, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Nom, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(m => m.Nom)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput ">
+        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label font-weight-bold uneLigneFonctionnel" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(m => m.Email)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput ">
+        @Html.LabelFor(m => m.ConfirmEmail, new { @class = "col-md-2 control-label font-weight-bold uneLigneFonctionnel" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.ConfirmEmail, new { @class = "form-control w-75", oncopy = "return false", onpaste = "return false" })
+            @Html.ValidationMessageFor(m => m.ConfirmEmail)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput ">
+        @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-2 control-label font-weight-bold uneLigneFonctionnel" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control w-75", @id = "Telephone" })
+            @Html.ValidationMessageFor(m => m.PhoneNumber)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput ">
+        @Html.LabelFor(m => m.Interet, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Interet, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(m => m.Interet)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput ">
+        @Html.LabelFor(m => m.Force, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Force, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(m => m.Force)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput">
+        @Html.LabelFor(m => m.Tarif, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Tarif, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(c => c.Tarif)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput ">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control w-75", oncopy = "return false" })
+            <p class="textePlusPetit">*Doit contenir une majuscule, une minuscule, un caractère spéciale et un chiffre.</p>
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput ">
+        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label font-weight-bold enleverPadding" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control w-75", oncopy = "return false", onpaste = "return false", Textmode = "Password" })
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput">
+        @Html.LabelFor(m => m.ListeMatieresSelectionnesId, new { @class = "col-md-2 control-label font-weight-bold " })
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.ListeMatieresSelectionnesId, Model.ListeMatieres.Select(x => new SelectListItem
+            {
+                Text = x.Nom,
+                Value = x.MatiereId.ToString()
+            }), new { @class = "form-control chosen-select matiereSelectionnees w-75", @multiple = "true" })
+            <p class="textePlusPetit">Vous pouvez sélectionner un ou des cours ou sélectionner une ou des matières, afin de filtrer les cours par matière.</p>
+            @Html.ValidationMessageFor(c => c.ListeMatieresSelectionnesId)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput">
+        @Html.LabelFor(m => m.ListeCoursSelectionnesId, new { @class = "col-md-2 control-label font-weight-bold uneLigneFonctionnel" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.ListeCoursSelectionnesId, Model.ListeCoursDemandes.Select(x => new SelectListItem
+            {
+                Text = x.Nom + " - " + x.NumeroCours,
+                Value = x.CoursId.ToString()
+            }), new { @class = "form-control chosen-select coursSelectionnes w-75", @multiple = "true" })
+            @Html.ValidationMessageFor(c => c.ListeCoursSelectionnesId)
+        </div>
+    </div>
+
+    <div class="text-center p-2"> <button type="submit" class="btn btn-primary">Soumettre</button></div>
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Scripts.js"></script>
+    <script src="~/Scripts/MasqueTelephone.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g==" crossorigin="anonymous"></script>
+
+    <script>
+        $(".matiereSelectionnees").chosen({
+            placeholder_text_multiple: "Veuillez sélectionner une ou des matières",
+            no_results_text: "Désolé, il n'y a aucune matière correspondant à la recherche :"
+        });
+
+        $(".coursSelectionnes").chosen({
+            placeholder_text_multiple: "Veuillez sélectionner un ou des cours",
+            no_results_text: "Désolé, il n'y a aucun cours correspondant à la recherche :"
+        });
+    </script>
+
+    <script>
+        function AppelAjaxCoursSelonMatiere() {
+            let matiere = [];
+
+            var longueurMatiereSelectionnees = $('.matiereSelectionnees').length;
+            for (i = 0; i < longueurMatiereSelectionnees; i++) {
+                matiere.push($('.matiereSelectionnees').eq(i).val());
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetListeCours", "Tuteurs")',
+                type: 'POST',
+                //Transformer un objet Javascript à JSON soit en string !
+                //Je dois mettre [0], car les données s'affichent automatiquement dans un tableau et je veux l'enlever !
+                data: JSON.stringify(matiere[0]),
+                contentType: "application/json; charset=UTF-8",
+                dateType: "json"
+            })
+                //La variable "result" contient le retour du Controller !
+                .done(function (result) {
+                    //Construire un tableau (par le map), qui retournera les ID des cours sélectionnés, en allant récupérer l'index de la classe "search-choice-close" par la classe "data-option-array-index" !
+                    //On doit partir de l'ID "ListeCoursSelectionnesId_chosen", car on a deux "muli-select" (un pour les matières et un pour les cours), qui possède la même classe "search-choice-close" ou "data-option-array-index" !
+                    //Le symbole ">" (ID > ID) signifie (parent) > (enfant) !
+                    //Donc, "anciensCoursSelectionnesIds" est un tableau (créé par le map) de ID des cours sélectionnés !
+                    var anciensCoursSelectionnesIds = $.map($('#ListeCoursSelectionnesId_chosen > ul.chosen-choices > li.search-choice > .search-choice-close'), function (el) {
+                        //Aller chercher la position (index) du cours sélectionnés par la valeur du "data-option-array-index" !
+                        let position = $(el).data('option-array-index');
+                        //.value retourne le ID en string, alors on doit le caster en int (parseInt), afin que le "indexOf" compare un tableau d'ID en "int" des cours sélectionnés et les ID en "int" des cours des matières choisies !
+                        //[0] = transformer un objet "JQuery" en objet "JavaScript" !
+                        //[position] = position de la classe "data-option-array-index" !
+                        //".options", car la valeur du ID est stocké dans une balise "option", par exemple <option value="1" selected>Calul #1</option> !
+                        //Aller chercher le ID du cours sélectionné (valeur) à l'aide de la position ([position]) (index) !
+                        return parseInt($(".coursSelectionnes")[0].options[position].value);
+                    });
+
+                    //Enlève tous les cours, car lorsqu'une matière est sélectionnée, le ou les cours en lien avec cette matière sont disponibles (par la méthode "append") !
+                    //Donc, si on enlève pas les cours au départ, il y aura un ou des cours en double !
+                    $(".coursSelectionnes").empty();
+
+                    $.each(result, function (key) {
+                        //Donne les ID des cours des matières choisies (result[key].CoursId) !
+                        //Donne la position (index) des cours sélectionnés (anciensCoursSelectionnesIds.indexOf(result[key].CoursId)) !
+
+                        //La méthode "indexOf" recherche dans le tableau (anciensCoursSelectionnesIds) l'élément spécifié (result[key].CoursId) et renvoie sa position !
+                        //La position est égale à "-1", lorsqu'un cours d'une matière choisie n'est pas sélectionné (l'élément n'est pas trouvé) !
+                        if (anciensCoursSelectionnesIds.indexOf(result[key].CoursId) != -1)
+                        {
+                            //Lorsqu'une matière est sélectionnée, le ou les cours en lien avec cette matière sont disponibles !
+                            //Le "selected" permet de mettre les cours sélectionnés, lorsque la position du cours n'est pas de "-1" !
+                            //Donc, cela fait que lorsque l'on rajoute ou supprime une matière, le cours déjà sélectionné (index != -1) reste sélectionné !
+                            $(".coursSelectionnes").append("<option value='" + result[key].CoursId + "' selected>" + result[key].Nom + " - " + result[key].NumeroCours + "</option>")
+                        }
+                        else
+                        {
+                            //Lorsqu'une matière est sélectionnée, le ou les cours en lien avec cette matière sont disponibles !
+                            //Lorsque j'ajoute une matière, l'index du cours de cette matière est de "-1", alors le cours n'est pas sélectionné !
+                            //Lorsque je supprime une matière, le "multi-select" supprime déjà tout les cours sélectionné de cette matière !
+                            $(".coursSelectionnes").append("<option value='" + result[key].CoursId + "'>" + result[key].Nom + " - " + result[key].NumeroCours + "</option>")
+                        }
+                    });
+                    //Mettre à jour mon contrôle DropDownList des cours !
+                    $('.coursSelectionnes').trigger("chosen:updated");
+                })
+                .fail(function (xhr) {
+                    alert(xhr.responseText);
+                });
+        }
+
+        //S'assure que tout le document HTML est téléchargé par le navigateur avant d'exécuter le code JavaScript !
+        $(document).ready(function () {
+            //Appeler ma fonction "AppelAjaxCoursSelonMatiere" quand il y a changement dans la sélection !
+            //Transformer le DropDownList des matières en "chosen" (on s'abonne à l'événement "chosen") !
+            $('.matiereSelectionnees').chosen().change(AppelAjaxCoursSelonMatiere);
+            //Transformer le DropDownList des cours en "chosen" (on s'abonne à l'événement "chosen") !
+            $('.coursSelectionnes').chosen();
+        });
+    </script>
+}
+
+@section css {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css" integrity="sha512-yVvxUQV0QESBt1SyZbNJMAwyKvFTLMyXSyBHDO4BG5t7k/Lw34tyqlSDlKIrIENIzCl+RVUNjmCPG+V/GMesRw==" crossorigin="anonymous" />
+}

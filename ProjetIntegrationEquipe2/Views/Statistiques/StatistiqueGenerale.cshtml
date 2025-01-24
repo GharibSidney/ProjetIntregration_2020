@@ -1,0 +1,39 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.Statistiques
+@model StatistiqueGeneraleVM
+
+<h2 class="text-center m-4">Statistiques générales</h2>
+
+    <ul class="marginL25 list-group w-50 ">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Nombre de tuteurs :
+            <span class="badge badge-primary badge-pill">@Model.NbTuteurs</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Nombre de tutores :
+            <span class="badge badge-primary badge-pill">@Model.NbTutores</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Nombre de programme :
+            <span class="badge badge-primary badge-pill">@Model.NbProgramme</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Nombre de cours :
+            <span class="badge badge-primary badge-pill">@Model.NbCours</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Nombre de demandes de tutorat :
+            <span class="badge badge-primary badge-pill">@Model.NbDemandes</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Nombre d'offres de tutorat :
+            <span class="badge badge-primary badge-pill">@Model.NbOffres</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Nombre de tutorats actifs :
+            <span class="badge badge-primary badge-pill">@Model.NbTutoratsActif</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            Nombre de tutorats passés :
+            <span class="badge badge-primary badge-pill">@Model.NbTutorats</span>
+        </li>
+    </ul>

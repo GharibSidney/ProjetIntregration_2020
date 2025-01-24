@@ -1,0 +1,77 @@
+﻿@using ProjetIntegrationEquipe2.Models
+@using ProjetIntegrationEquipe2.ViewModels
+
+@model HomeIndexVM
+
+@{
+    string imagePath = Server.MapPath("~/upload/Images/Carrousel/");
+    string[] files = Directory.GetFiles(imagePath);
+    int nbimages = files.Count();
+}
+
+<div id="carousel" class="carousel slide pb-5" data-ride="carousel" data-interval="5000">
+    <ol class="carousel-indicators">
+
+        @for (int i = 0; i < nbimages; i++)
+        {
+            <li data-target="#carousel" data-slide-to="@i" class="@(i == 0 ? "active" : string.Empty)"></li>
+        }
+    </ol>
+    <div class="carousel-inner">
+        @{
+            int image = 0;
+
+            foreach (string file in files)
+            {
+
+                <div class="carousel-item @(image == 0 ? "active" : string.Empty)">
+                    <img src="~/upload/Images/Carrousel/@Path.GetFileName(file)" class="d-block w-100">
+                </div>
+                image++;
+            }
+
+        }
+    </div>
+    <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+@for (int i = 0; i < Model.listeTuteursVM.Count(); i++)
+{
+    <div id="block@(i)">
+        <p class="text-center w-100 p-0">@Model.listeIntrosTuteur[i]</p>
+        <div class="jumbotron noBackground jumbotron-fluid p-0">
+            <div class="container">
+                <img src="@Url.Content(Model.listeTuteursVM[i].CheminPhoto)" class="img-fluid w-25 h-25" />
+                @if (@Model.listeTuteursVM[i].CoteTotal != 0.0)
+                {
+                    <span class="moyenneAlignement">Moyenne des cotes: @Model.listeTuteursVM[i].CoteTotal</span>
+                }
+                <p class="forceInteretAlignement lead">Forces: @Model.listeTuteursVM[i].Force <br /> Intérets: @Model.listeTuteursVM[i].Interet</p>
+                <div class="TailleNom">@Model.listeTuteursVM[i].Prenom @Model.listeTuteursVM[i].Nom!</div>
+            </div>
+
+        </div>
+    </div>
+}
+<div id="blueRow" class="row m-0">
+    &nbsp
+</div>
+@{ try
+    {
+        <div class="pl-3 pt-2">
+            @Html.Action("Promotion")
+        </div>
+    }
+    catch (Exception)
+    {
+        <p>Il n'y a pas de promotion pour le moment</p>
+    }
+
+}

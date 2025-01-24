@@ -1,0 +1,93 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.Tutores
+@model TutoreEditVM
+
+<h2 class="text-center m-1">Modification du compte</h2>
+
+
+@using (Html.BeginForm("Edit", "Tutores", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.Id)
+
+    <div class="form-group groupeInput mb-5">
+        @Html.LabelFor(m => m.CheminPhoto, new { @class = "col-md-2 control-label enleverPadding uneLigneFonctionnel font-weight-bold" })
+        <div class="col-md-10">
+
+            @Html.TextBoxFor(m => m.CheminPhoto, new { @class = "form-control invisible" })
+            <img src="@Url.Content(Model.CheminPhoto)" id="imagePreview" />
+
+            <input type="file" id="ImageFile" name="ImageFile" style="display: none;" accept="image/x-png,image/gif,image/jpeg" onchange="ApercuImage(this, document.getElementById('imagePreview'));" />
+            <input type="button" value="Parcourir" onclick="document.getElementById('ImageFile').click();" />
+            @Html.ValidationMessageFor(m => m.ImageFile)
+            @Html.ValidationMessage("ImageSizeError")
+
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput mb-4">
+        @Html.LabelFor(m => m.Prenom, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Prenom, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(m => m.Prenom)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput mb-4">
+        @Html.LabelFor(m => m.Nom, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Nom, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(m => m.Nom)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput mb-4">
+        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label font-weight-bold uneLigneFonctionnel" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(m => m.Email)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput mb-4">
+        @Html.LabelFor(m => m.ConfirmEmail, new { @class = "col-md-2 control-label font-weight-bold uneLigneFonctionnel" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.ConfirmEmail, new { @class = "form-control w-75", oncopy = "return false", onpaste = "return false" })
+            @Html.ValidationMessageFor(m => m.ConfirmEmail)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput mb-4">
+        @Html.LabelFor(m => m.Telephone, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Telephone, new { @class = "form-control w-75", @id = "Telephone" })
+            @Html.ValidationMessageFor(m => m.Telephone)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput mb-4">
+        @Html.LabelFor(m => m.Interet, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Interet, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(m => m.Interet)
+        </div>
+    </div>
+
+    <div class="form-group d-flex justify-content-center groupeInput mb-4">
+        @Html.LabelFor(m => m.Force, new { @class = "col-md-2 control-label font-weight-bold" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Force, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(m => m.Force)
+        </div>
+    </div>
+
+    <div class="text-center p-2"> <button type="submit" class="btn btn-primary">Soumettre</button></div>
+}
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Scripts.js"></script>
+    <script src="~/Scripts/MasqueTelephone.js"></script>
+}

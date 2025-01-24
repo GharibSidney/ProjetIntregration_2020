@@ -1,0 +1,263 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels
+@using ProjetIntegrationEquipe2.Models
+@using ProjetIntegrationEquipe2.Controllers
+@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <title>@ViewBag.Title - Tutorat Equipe 2, 2020 -</title>
+    @Styles.Render("~/Content/css")
+    @RenderSection("css", required: false)
+</head>
+<body>
+    @* Package Popper qui fait fonctionner les dropdown a gauche *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <div>
+        <div class="row">
+            <div class="col p-0">
+                <a href="~/Home/Index">
+                    <img src="~/upload/Images/College_de_LaConnaissanceAleatoireBleu.jpg" class="img-fluid rounded-top" />
+                </a>
+            </div>
+
+            <div class="col-10">
+                <div class="row h-50">
+                    <div class="quote">Le seul collège publique transfrontalier et binational au monde</div>
+                </div>
+
+                <div class="row h-50 align-items-end connectionNAV">
+                    <div class="ml-auto p-0">
+                        <navbar class="navbar-expand">
+                            @Html.Action("RenderLoginPartial", "Home")
+                        </navbar>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="blueRow" class="row">
+        <div class="col-12">
+            @* Sans le nbsb le séparateur n'affiche pas *@
+            &nbsp
+        </div>
+    </div>
+
+    <div>
+        <div class="row">
+            <div class="col-2 ColGriseLeftSide">
+                <ul class="nav flex-column" id="stickyLeftLinkGroup">
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <li class="btn-group dropright">
+
+                            <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Menu
+                            </a>
+                            <div class="dropdown-menu">
+                                @Html.ActionLink("Créer un compte tutoré", "Create", "Tutores", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                <div class="dropdown-divider"></div>
+                                @Html.ActionLink("Liste des tuteurs", "ListeTuteurs", "Tuteurs", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        if (User.IsInRole(RolesNames.Administrateur))
+                        {
+                            <li class="btn-group dropright">
+
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Offres / Demandes
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Gérer les offres", "Index", "Offres", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Gérer les demandes", "Index", "Demandes", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Tuteurs / Tutorés
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Créer un compte tuteur", "Create", "Tuteurs", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Gérer les tuteurs", "Index", "Tuteurs", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Tuteurs en attente de cours", "Index", "ApprouverCours", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Gérer les tutorés", "Index", "tutores", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Commentaires / Séances
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Gérer les commentaires", "Index", "Commentaires", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Liste des séances", "ListeSeances", "Seances", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Paiements
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Voir les paiements en attente", "ListePaiements", "Paiements", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Voir les paiements complétés", "ListePaiementsValide", "Paiements", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Voir les paiements refusés", "ListePaiementsRefuse", "Paiements", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Cours / Matières
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Gérer les cours", "Index", "AjouterCours", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Ajouter cours", "Create", "AjouterCours", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Gérer les matières", "Index", "Matieres", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Ajouter matière", "Create", "Matieres", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Statistiques
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Statistiques générales", "StatsGeneral", "Statistiques", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Statistiques des paiements", "StatsPaiements", "Statistiques", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+
+                                </div>
+                            </li>
+                        }
+                        //Si il a le role tuteur il devrait avoir le role tutore
+                        if (User.IsInRole(RolesNames.Tuteur))
+                        {
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Offres / Demandes
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Liste des offres", "ListeOffres", "Offres", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Créer une offre", "Create", "Offres", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Gérer mes offres", "Index", "Offres", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Liste des demandes", "ListeDemandes", "Demandes", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Créer une demande", "Create", "Demandes", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Gérer mes demandes", "Index", "Demandes", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Commentaires
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Commentaires sur mon tutorat", "PageCommentaires", "Commentaires", routeValues: new { Id = User.Identity.GetUserId() }, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Séances / Tuteurs
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Ajouter une séance", "Create", "Seances", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Gérer mes séances de tutorat", "Index", "Seances", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Liste des tuteurs", "ListeTuteurs", "Tuteurs", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Paiements
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Voir mes paiements en attente", "ListePaiementsTutores", "Paiements", routeValues: new { Id = User.Identity.GetUserId() }, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+                        }
+                        //Seulement tutores
+                        if (User.IsInRole(RolesNames.Tutore) && !User.IsInRole(RolesNames.Tuteur))
+                        {
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Demandes/Offres
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Créer une demande", "Create", "Demandes", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Gérer mes demandes", "Index", "Demandes", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Liste des offres", "ListeOffres", "Offres", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Commentaires
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Écrire un commentaire", "Create", "Commentaires", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Commentaires envers tuteurs", "PageCommentairesTutore", "Commentaires", routeValues: new { Id = User.Identity.GetUserId() }, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Séances / Tuteurs
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Voir mes séances", "IndexTutore", "Seances", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Devenir tuteur", "CreateTuteurFromTutore", "Tuteurs", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                    @Html.ActionLink("Liste des tuteurs", "ListeTuteurs", "Tuteurs", routeValues: null, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+
+                            <li class="nav-item SideLinkBox btn-group dropright">
+                                <a href="#" type="button" class="btn dropdown-toggle text-light text-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Paiements
+                                </a>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("Voir mes paiements en attente", "ListePaiementsTutores", "Paiements", routeValues: new { Id = User.Identity.GetUserId() }, htmlAttributes: new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
+            <div class="col-10 p-0">
+                <div class="body-content w-100 h-100">
+                    @RenderBody()
+                    <hr />
+                </div>
+            </div>
+        </div>
+
+        <footer class="row">
+            @* Le div vide represente la colonne avec les menus *@
+            <div class="col-2">&nbsp;</div>
+            <a class="col-1 pt-2" href="~/Home/About">À propos</a>
+            <a class="col-3 pt-2" href="~/Home/PageAide">Guide d'utillisation du site</a>
+            <p class="col-3 pt-2">&copy; Équipe 2 2020, tous droits réservés</p>
+            <a class="col-3 pt-2" href="mailto:carrefour@cegepgranby.qc.ca">Contact: carrefour@("@cegepgranby.qc.ca")</a>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

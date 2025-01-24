@@ -1,0 +1,86 @@
+﻿@using ProjetIntegrationEquipe2.Models
+@using ProjetIntegrationEquipe2.ViewModels.Paiements
+@using System.Globalization;
+
+@model ProjetIntegrationEquipe2.ViewModels.Paiements.IndexVM
+
+<h2 class="text-center m-1">Effectuer un paiement</h2>
+
+@*Lorsque je clique sur le bouton "Payer", va dans la méthode "Index" du controller "Paiements" du "POST" !*@
+
+@{
+    double prix = 0;
+    prix = Model.PrixTotal * 100;
+}
+
+<form id="form" action='@Url.Action("Index", "Paiements")' method="POST">
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.TutoratId)
+    @Html.HiddenFor(m => m.PrixTotal)
+
+    <article class="text-center m-4">
+        <label>Nombre d'heures de tutorat : @Model.Heure heures </label>
+    </article>
+    <article class="text-center m-4">
+        <label>Tarif du tuteur : @Model.Tarif $/h</label>
+    </article>
+    <article id="PrixTotal" class="text-center m-4">
+        <label>Montant total : @Model.PrixTotal $</label>
+    </article>
+    <article class="text-center m-4">
+        <label>Séances réalisées : </label><br />
+        @foreach (PlageHoraire plage in Model.ListePlageHoraire)
+        {
+            <p>
+                @plage.DateHeureDebut.ToString("d MMMM HH:mm", new CultureInfo("fr")) jusqu'au
+                @plage.DateHeureFin.ToString("d MMMM HH:mm", new CultureInfo("fr"))
+            </p>
+        }
+    </article>
+
+    <div class="text-center m-5 field-validation-error">
+        @Html.ValidationSummary()
+    </div>
+
+    <script src="//checkout.stripe.com/v3/checkout.js"
+            class="stripe-button"
+            data-label="Payer avec une carte"
+            data-email="@Model.Courriel"
+            data-key="@Model.ClePublic"
+            data-locale="auto"
+            data-name="Centre de paiement"
+            data-description="Paiement des séances de tutorat"
+            data-amount="@prix"
+            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+            data-currency="CAD">
+    </script>
+
+    @*Permet d'afficher un bouton personnalisé avec notre propre style !*@
+    <button type="submit" class="btn btn-primary">Payer avec une carte</button>
+</form>
+
+<div class="text-center m-4">
+    @using (Html.BeginForm("Refuser/" + Model.TutoratId, "Paiements", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment refuser le paiement ?')">Refuser le paiement</button>
+    }
+</div>
+
+@section scripts {
+    <script>
+        //Permet de rendre "invisible" le bouton de stripe pour afficher un bouton personnalisé avec notre propre style !
+        document.getElementsByClassName("stripe-button-el")[0].style.display = 'none';
+
+        //Permet de centrer le bouton "Payer avec une carte" !
+        //On crée un "div" après le "validation-summary-valid", afin de mettre le bouton "Payer avec une carte" centrer !
+        $unDiv = $('<div></div>');
+        $unDiv.attr("id", "unDiv");
+        $unDiv.addClass("text-center");
+        $unDiv.addClass("m-4");
+
+        $unDiv.insertAfter($(".validation-summary-valid"));
+        $(".btn-primary").appendTo($unDiv);
+    </script>
+}

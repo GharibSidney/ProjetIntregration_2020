@@ -1,0 +1,124 @@
+﻿@using Microsoft.AspNet.Identity
+@using ProjetIntegrationEquipe2.Models
+@using System.Globalization;
+@using ProjetIntegrationEquipe2.ViewModels.Demandes
+@model DemandeViewOnlyVM
+
+
+<h2 class="m-1 text-center">Liste des demandes</h2>
+
+@if (!User.IsInRole(RolesNames.Administrateur))
+{
+    @Html.ActionLink("Créer une nouvelle demande", "Create", "Demandes", null, new { @class = "btn btn-primary m-2", role = "button" })
+}
+
+@*Rechercher*@
+@using (Html.BeginForm("ListeDemandes", "Demandes", FormMethod.Get))
+{
+    @:&nbsp;<b>@Html.Label("Rechercher par :")</b>
+    <br />
+
+    @Html.RadioButton("rechercherPar", "Nom", new { @class = "ml-2", @checked = true })
+    @Html.Label("Nom du tutoré", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "Titre", new { @class = "ml-2" })
+    @Html.Label("Titre", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "Courriel", new { @class = "ml-2" })
+    @Html.Label("Courriel", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "Cours", new { @class = "ml-2" })
+    @Html.Label("Cours", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "PlageHoraire", new { @class = "ml-2", @id = "rechercherDate", onclick= "invisibilite()" })
+    @Html.Label("Plage Horaire", new { @class = "ml-1" })
+    @Html.TextBox("rechercher", "", new { @class = "ml-2 mb-2 form-control width30", @id = "rechercherTextRechercher" })
+
+    <div id="champDate" class="form-inline invisible">
+        @Html.Label("Date de début", new { @class = "ml-2" })
+        @Html.TextBox("dateDebut", null, new { @class = "ml-2 form-control w-25 datetimepicker" })
+        @Html.Label("Date de fin", new { @class = "ml-2" })
+        @Html.TextBox("dateFin", null, new { @class = "ml-2 form-control w-25 datetimepicker" })
+    </div>
+
+    <input type="submit" value="Rechercher" class="btn btn-primary m-2" />
+}
+
+<div class="table-responsive-lg ml-1">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Nom</th>
+                <th class="text-center" scope="col">Titre</th>
+                <th class="text-center" scope="col">Courriel</th>
+                <th class="text-center" scope="col">Plages Horaires</th>
+                <th class="text-center" scope="col">Cours demandés</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListeDemandes.Count() == 0)
+            {
+                <tr>
+                    <td colspan="5" class="text-center">Il n'y a pas de demande en ce moment</td>
+                </tr>
+            }
+            else
+            {
+                foreach (DemandeTutorat demande in Model.ListeDemandes)
+                {
+                    <tr class="text-center">
+                        <td>@demande.Tutore.Prenom @demande.Tutore.Nom</td>
+                        <td>@demande.Titre</td>
+                        <td>@demande.Tutore.Email</td>
+                        <td>
+                            @foreach (PlageHoraire plage in demande.ListePlageHoraire)
+                            {
+                                <p>
+                                    @plage.DateHeureDebut.ToString("d MMMM HH:mm", new CultureInfo("fr")) jusqu'au
+                                    @plage.DateHeureFin.ToString("d MMMM HH:mm", new CultureInfo("fr"))
+                                </p>
+                            }
+                        </td>
+                        <td>
+                            @foreach (Cours cours in demande.ListeDeCours)
+                            {
+                                <p>@cours.Nom - @cours.NumeroCours</p>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<a href="~/Home/Index" class="btn btn-primary btn-lg ml-1">Retour à l'accueil</a>
+
+@section css {
+    @*DateTimePicker*@
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" integrity="sha512-LT9fy1J8pE4Cy6ijbg96UkExgOjCqcxAC7xsnv+mLJxSvftGVmmc236jlPTZXPcBRQcVOWoK1IJhb1dAjtb4lQ==" crossorigin="anonymous" />
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*DateTimePicker*@
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js" integrity="sha512-s5u/JBtkPg+Ff2WEr49/cJsod95UgLHbC00N/GglqdQuLnYhALncz8ZHiW/LxDRGduijLKzeYb7Aal9h3codZA==" crossorigin="anonymous"></script>
+
+    <script>
+        $('.datetimepicker').datetimepicker({
+            controlType: 'select',
+            oneLine: true,
+            timeFormat: 'HH:mm',
+            prevText: "Précédent",
+            nextText: "Suivant",
+            timeText: "Temps",
+            currentText: "Aujourd'hui",
+            closeText: "Fermer",
+            dayNamesMin: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+            monthNames: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"]
+        });
+    </script>
+
+    @*Pour les dates*@
+    <script src="~/Scripts/DateRechercherInvisible.js"></script>
+}

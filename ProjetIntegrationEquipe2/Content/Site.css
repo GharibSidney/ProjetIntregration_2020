@@ -1,0 +1,350 @@
+﻿html {
+    padding: 0px;
+    margin: 0px;
+    overflow-x: hidden;
+}
+
+body {
+    padding-left: 4%;
+    padding-right: 4%;
+    background-color: lightsteelblue;
+    font-family: 'Roboto', sans-serif;
+}
+
+.ColGriseLeftSide {
+    background-color: #222B6E;
+    padding: 0%;
+    /*Pour que le menu du dropdown ne soit pas sous les autres elements*/
+    z-index: 1000;
+}
+
+/*Le bouton du dropdown*/
+.ColGriseLeftSide > ul > li > a {
+    border-bottom: 2px solid #A0102B;
+    border-style: solid;
+}
+
+/*Le rouge qui apparait sur les boutons du dropdown*/
+.ColGriseLeftSide > ul > li > a:hover {
+    opacity: 0.8;
+    background-color: #A0102B;
+}
+
+/*Permet que le groupe de dropdown suit le scroll*/
+#stickyLeftLinkGroup{
+    top: 0px;
+    position: sticky;
+}
+
+/*Separateur entre chaque bouton du dropdown*/
+.SideLinkBoxSeperator {
+    color: red;
+    text-align: end;
+    padding-right: 1em;
+}
+
+#SideLinkBox {
+    min-height: 50px;
+    color: white;
+    text-align: right;
+}
+
+#SideLinkBox:hover {
+    background-color: #A0102B;
+    box-shadow: 0px 4px #9b8877;
+}
+
+footer {
+    background-color: #222B6E;
+    color: RGB(254,254,254);
+}
+
+.carousel-inner {
+    width: 100%;
+    max-height: 50% !important;
+    min-height: 25% !important;
+}
+
+.carousel-inner > .carousel-item > img {
+    max-height: 450px !important;
+}
+
+.notices {
+    background-color: lightsteelblue;
+    text-align: center;
+}
+
+.connectionNAV {
+    background-color: #222B6E;
+    text-align: center;
+}
+
+#registerLink, #loginLink {
+    color: white;
+}
+
+#registerLink:hover, #loginLink:hover {
+    color: Highlight;
+}
+
+#registerLink {
+    text-align: end;
+}
+
+#blueRow {
+    background-color: #A0102B;
+}
+
+#footerP {
+    text-align: center;
+}
+
+.imageprofil {
+    max-height: 200px;
+    max-width: 300px;
+}
+
+.logo {
+    max-width: 10%;
+}
+
+.imageprofil {
+    max-height: 200px;
+    max-width: 300px;
+}
+/*Les blocks qui affichent les tuteurs sur l'index*/
+#block0 {
+    width: 100%;
+    background-color: lightsteelblue;
+    font-size: 45px;
+    color: white;
+}
+
+#block1 {
+    width: 100%;
+    background-color: #2451C8;
+    font-size: 45px;
+    color: white;
+}
+
+#block2 {
+    width: 100%;
+    background-color: lightsteelblue;
+    font-size: 45px;
+    color: white;
+}
+.TailleNom{
+    font-size:60px;
+}
+
+.quote {
+    color: #A0102B;
+    font-size: 25px;
+    margin-top: 25px;
+    margin-left:25%;
+    font-family:Rockwell;
+    font-weight: bold;
+}
+
+.moyenneAlignement{
+    margin-left:30%;
+}
+
+.forceInteretAlignement{
+    margin-left:56%;
+}
+
+.groupeInput {
+    padding-left: 15%;
+    margin-bottom: 5%;
+    margin-top: 5%;
+}
+
+.invisible {
+    display: none;
+}
+
+.titre {
+    color: white;
+    margin-left: 15%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.input-validation-error {
+    border-color: red;
+}
+
+.field-validation-error {
+    color: red;
+}
+
+#imagePreview {
+    max-width: 50%;
+    max-height: 50%;
+}
+.margin15 {
+    flex-basis: 15%;
+}
+
+#divDesCoursDejaChoisis {
+    background-color: #fff;
+    width: 75%;
+}
+
+#imgValide {
+    max-height: 10%;
+    max-width: 10%;
+}
+
+.btnSupprimer {
+    text-align: right;
+    padding: 6px 12px;
+    color: white;
+    background-color: #F44336;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.conteneurDivInput {
+    display: inline-flex;
+}
+
+.plageHoraireConteneurTout {
+    text-align: center;
+}
+
+.marginRight {
+    margin-right: 15%;
+}
+
+.marginLeft {
+    margin-left: 3%;
+}
+
+.boutonAjoutPlageHoraire {
+    margin-top: 5%;
+    margin-left: 3%;
+    color: rgb(254,254,254);
+}
+
+.checked, .fa-star-half-o, .fa-star-o {
+    color: #a0102b;
+}
+
+
+#SectionMeilleursTuteurs {
+    font-size: 21px;
+    margin: 0px;
+    text-align: center;
+}
+
+#SectionMeilleursTuteurs > img {
+    max-height: 100%;
+    max-width: 20%;
+}
+
+.marginSaufGauche {
+    margin-right: 5%;
+    margin-top: 4%;
+    margin-bottom: 5%;
+}
+
+.marginSaufDroite {
+    margin-top: 3rem;
+    margin-right: 1rem;
+    margin-bottom: 3rem;
+    margin-left: 3rem;
+}
+
+.moitieHauteur {
+    height: 65px;
+}
+
+.paddingLeft {
+    padding-left: 8%;
+}
+
+.boutonCommentaire {
+    margin-left: 3%;
+}
+
+.boutonProfil {
+    margin-top: 5%;
+    margin-left: 38%;
+}
+
+/*Bouton modifier dans index matiere et ajouterCours*/
+.btnModifier {
+    padding-top: 6.5px;
+    padding-bottom: 7px;
+}
+
+.sansPadDroit {
+    padding-right: 0%;
+}
+
+.uneLigne {
+    padding-left: 0%;
+}
+
+.enleverPadding {
+    padding-right: 0%;
+    padding-left: 0%;
+}
+
+.uneLigneFonctionnel {
+    clear: both;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.petitMargin{
+    margin-left:2%;
+}
+.plusPetitMargin {
+    margin-left: 1%;
+}
+.longueurCustom {
+    width: 77.2%;
+    margin-left: -4.5%;
+}
+
+.textePlusPetit{
+    font-size: 75%;
+}
+
+/*Retire le background pour utiliser la couleur de fond du site*/
+.noBackground {
+    background: none;
+}
+
+.width65 {
+    width: 65%;
+}
+
+.tailleRefus{
+    font-size:45px;
+}
+.margeStats{
+    margin-top:5%;
+}
+.marginL25 {
+    margin-left: 25%;
+}
+.marginL38{
+    margin-left:38%;
+}
+
+.bleuPale{
+    background-color: dodgerblue;
+}
+
+.marginL25{
+    margin-left:25%;
+}
+
+.width30 {
+    width: 30%;
+}
+

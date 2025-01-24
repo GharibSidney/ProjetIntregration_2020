@@ -1,0 +1,115 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.ApprouverCours
+@using ProjetIntegrationEquipe2.Models
+@model ApprouverCoursIndexVM
+
+@{
+    int compteurDeCours = 0;
+    string name = "ListeStatusCoursMaitrise[" + compteurDeCours.ToString() + "]";
+}
+<h2 class="text-center m-1">Tuteurs en attente de cours</h2>
+
+
+@using (Html.BeginForm("Index", "ApprouverCours", FormMethod.Get))
+{
+    <b class="ml-2">@Html.Label("Rechercher par :")</b>
+    <br />
+
+    @Html.RadioButton("rechercherPar", "Nom", new { @class = "ml-2", @checked = true })
+    @Html.Label("Nom du tuteur", new { @class = "ml-1" })
+    @Html.RadioButton("rechercherPar", "Courriel", new { @class = "ml-2" })
+    @Html.Label("Courriel", new { @class = "ml-1" })
+    @Html.TextBox("rechercher", "", new { @class = "ml-2 form-control w-25" })
+    <input type="submit" value="Rechercher" class="btn btn-primary m-2" />
+}
+
+@if (Model.TuteurList.Count() == 0 || Model.TuteurList == null)
+{
+    <h3 class="text-center pt-5">Il n'y a pas de cours en attente d'être approuvé</h3>
+}
+else
+{
+    using (Html.BeginForm("Enregistrer", "ApprouverCours", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        //Renvoyer un liste de ID !
+        //Donc, tu fais une boucle !
+        for (int i = 0; i < Model.TuteurList.Count; i++)
+        {
+            @Html.HiddenFor(model => Model.TuteurList[i].Id)
+        }
+        for (int i = 0; i < Model.CoursMaitriseList.Count; i++)
+        {
+            @Html.HiddenFor(model => Model.CoursMaitriseList[i].TuteurId)
+            @Html.HiddenFor(model => Model.CoursMaitriseList[i].CoursId)
+            @Html.HiddenFor(model => Model.CoursMaitriseList[i].CoursMaitriseId)
+        }
+        foreach (Tuteur tuteur in Model.TuteurList)
+        {
+            <div class="container h-100">
+                <div id="card" class="card">
+                    <div class="card-header">
+                        <a class="btn" data-toggle="collapse" role="button" href="#a@(tuteur.Id)" aria-expanded="false" aria-controls="@tuteur.Id">
+                            Nom: @tuteur.Prenom @tuteur.Nom <br /> Courriel: @tuteur.Email
+                        </a>
+                    </div>
+                    <div id="a@(tuteur.Id)" class="collapse">
+                        <div class="card card-body">
+                            <table class="table table-bordered table-striped table-hover">
+
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" scope="col">Cours</th>
+                                        <th class="text-center" scope="col">Accepter</th>
+                                        <th class="text-center" scope="col">Refuser</th>
+                                        <th class="text-center" scope="col">Attendre</th>
+                                    </tr>
+                                </thead>
+
+                                @for (int compteur = 0; compteur < tuteur.ListeCoursMaitrise.Count(); compteur++)
+                                {
+                                    <tbody>
+                                        <tr>
+                                            <td>@tuteur.ListeCoursMaitrise[compteur].Cours.Nom</td>
+
+                                            <td>
+                                                <input type="radio" name="@name" value="Validé">
+                                            </td>
+                                            <td>
+                                                <input type="radio" name="@name" value="Refusé">
+                                            </td>
+                                            <td>
+                                                <input type="radio" name="@name" value="En attente" checked="checked">
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                    compteurDeCours++;
+                                    name = "ListeStatusCoursMaitrise[" + compteurDeCours.ToString() + "]";
+                                }
+
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary mt-2">Sauvegarder choix</button>
+        </div>
+    }
+}
+
+
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/Scripts.js">
+
+    </script>
+
+
+}

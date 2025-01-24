@@ -1,0 +1,100 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels
+@using ProjetIntegrationEquipe2.Models
+@using Microsoft.AspNet.Identity
+@{
+    @model ProfilTutoreVM
+}
+@Html.HiddenFor(c => c.Id)
+
+<h2 class="text-center m-1 pb-4">Profil de @Model.Prenom @Model.Nom</h2>
+
+<div>
+    <p>
+        <img src="@Url.Content(@Model.CheminPhoto)" class="imageprofil offset-5" />
+    </p>
+</div>
+
+<table class="table table-borderless table-hover offset-3 w-75">
+    <tr>
+        <td class="font-weight-bolder w-25">Nom</td>
+        <td>@Model.Prenom @Model.Nom</td>
+    </tr>
+
+    <tr>
+        <td class="font-weight-bolder">Courriel</td>
+        <td>@Model.Courriel</td>
+    </tr>
+
+    <tr>
+        <td class="font-weight-bolder">Telephone</td>
+        <td>@Model.Telephone</td>
+    </tr>
+
+    <tr>
+        <td class="font-weight-bolder">Intérets</td>
+        @if (Model.Interets.IsEmpty() || Model.Interets == "")
+        {
+            <td>Cet utilisateur n'a pas ajouté d'intérets</td>
+        }
+        else
+        {
+            <td>@Model.Interets</td>
+        }
+    </tr>
+
+    <tr>
+        <td class="font-weight-bolder">Forces</td>
+        @if (Model.Forces.IsEmpty() || Model.Forces == "")
+        {
+            <td>Cet utilisateur n'a pas ajouté de forces</td>
+        }
+        else
+        {
+            <td>@Model.Forces</td>
+        }
+    </tr>
+    @if (Model.ListeCoursMaitrises.Count() != 0)
+    {
+        <tr>
+            <td class="font-weight-bolder">Cours maitrisés</td>
+            <td>
+                @foreach (CoursMaitrise cours in Model.ListeCoursMaitrises)
+                {
+                    <ul class="list-group width65">
+                        <li class="list-group-item d-flex justify-content-between align-items-center noBackground">
+                            @cours.Cours.Nom
+                            @if (cours.StatutCoursMaitrise.Statut == StatutCours.Validé)
+                            {
+                                <span class="badge badge-success badge-pill">@cours.StatutCoursMaitrise.Statut</span>
+                            }
+                            else if (cours.StatutCoursMaitrise.Statut == StatutCours.Refusé)
+                            {
+                                <span class="badge badge-danger badge-pill">@cours.StatutCoursMaitrise.Statut</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-primary badge-pill">@cours.StatutCoursMaitrise.Statut</span>
+                            }
+                        </li>
+                    </ul>
+                }
+                @* Permet de retrecir la largeur du bloc avec les cours et status *@
+                <p class="w-75">&nbsp;</p>
+            </td>
+        </tr>
+    }
+</table>
+<div class="boutonProfil">
+    <p>
+        <a href="../../Home/Index" class="btn-primary btn-lg m-2">Retour à l'accueil</a>
+        @if (Model.Id == User.Identity.GetUserId() || User.IsInRole(RolesNames.Administrateur))
+        {
+            <a href="../../Tutores/Edit/@Model.Id" class="btn-success btn-lg m-2">Modifier profil</a>
+        }
+        @if (Model.Id == User.Identity.GetUserId())
+        {
+            <a href="../../Tutores/Password" class="btn-success btn-lg m-2">Modifier mot de passe</a>
+        }
+
+    </p>
+</div>

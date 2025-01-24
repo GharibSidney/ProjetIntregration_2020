@@ -1,0 +1,30 @@
+﻿@using ProjetIntegrationEquipe2.ViewModels.Matieres
+@using ProjetIntegrationEquipe2.Models
+@model MatieresEditVM
+
+<h2 class="text-center m-3">Modification d'une matière</h2>
+
+@using (Html.BeginForm("Edit", "Matieres", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <hr />
+
+    @Html.HiddenFor(m => m.MatiereId);
+
+    <div class="form-group d-flex justify-content-center groupeInput">
+        @Html.LabelFor(m => m.Nom, new { @class = "col-md-2 control-label font-weight-bold enleverPadding uneLigneFonctionnel" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Nom, new { @class = "form-control w-75" })
+            @Html.ValidationMessageFor(c => c.Nom)
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary m-1">Enregistrer le changement</button>
+    </div>
+}
+
+@section scripts
+    {
+    @Scripts.Render("~/bundles/jqueryval")
+}

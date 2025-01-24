@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNet.Identity
+@using ProjetIntegrationEquipe2.Models
+@using System.Globalization;
+@using ProjetIntegrationEquipe2.ViewModels.Seances
+@model SeancesIndexTutoreVM
+
+
+<h2 class="text-center m-1">Voir mes séances de tutorat</h2>
+
+
+<div class="table-responsive-lg ml-1">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Nom du tuteur</th>
+                <th class="text-center" scope="col">Plages Horaire</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListeSeances.Count() == 0)
+            {
+                <tr>
+                    <td colspan="2" class="text-center">Il n'y a pas de séances en ce moment</td>
+                </tr>
+            }
+            else
+            {
+                foreach (Tutorat seance in Model.ListeSeances)
+                {
+                    <tr class="text-center">
+                        <td>@seance.Tuteur.Prenom @seance.Tuteur.Nom</td>
+                        <td>
+                            @foreach (PlageHoraire plage in seance.ListePlageHoraire)
+                            {
+
+                                <p>
+                                    @plage.DateHeureDebut.ToString("d MMMM HH:mm", new CultureInfo("fr")) jusqu'au
+                                    @plage.DateHeureFin.ToString("d MMMM HH:mm", new CultureInfo("fr"))
+                                </p>
+
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+<a href="~/Home/Index" class="btn btn-primary btn-lg m-1">Retour à l'accueil</a>

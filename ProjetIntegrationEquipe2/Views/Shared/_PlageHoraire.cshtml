@@ -1,0 +1,117 @@
+﻿
+<div id="rangee" class="row">
+    @if (Model.ListeDateTimes != null)
+    {
+
+        if (Model.ListeDateTimes.Count != 0)
+        {
+            //Ce code est seulement utiliser si jamais il y a une erreur dans les plages horaires
+            //Je set le id et le name des items de la liste en utilisant un compteur
+            int compteurInverse = Model.ListeDateTimes.Count - 1;
+            int compteur = Model.ListeDateTimes.Count - 2;
+            string divTimeCompteur = "divTime" + compteur.ToString();
+            string conteneurInputCompteur = "ConteneurInput" + compteur.ToString();
+            string name = "ListeDateTimes[" + compteur.ToString() + "]";
+            string idList = "ListeDateTimes" + compteur.ToString();
+            string paddindLeft = "";
+            DateTime time = new DateTime();
+
+            int compteurDePlageHoraire = (Model.ListeDateTimes.Count - 1) / 2;
+            string idPlageHoraire = "plageHoraire" + compteurDePlageHoraire.ToString();
+
+            string idBoutonSupprimer = "btnSupprimer" + compteurDePlageHoraire.ToString();
+
+
+
+            for (int compteurListe = 0; compteurListe < Model.ListeDateTimes.Count; compteurListe++)
+            {
+                time = Model.ListeDateTimes[compteurInverse - 1];
+                idBoutonSupprimer = "btnSupprimer" + compteurDePlageHoraire.ToString();
+
+                if ((Model.ListeDateTimes.Count - 1) / 2 != compteurDePlageHoraire)
+                {
+                    paddindLeft = "";
+                }
+                else
+                {
+                    paddindLeft = "paddingLeft";
+
+                    if (compteurDePlageHoraire == 0)
+                    {
+                        paddindLeft = "";
+                    }
+                }
+
+                <div id="@idPlageHoraire" class="row col-12 plageHoraireNombre plageHoraireConteneurTout justify-content-center moitieHauteur @paddindLeft">
+
+                    <div id="@divTimeCompteur" class="conteneurDivInput m-5 marginRight">
+                        <p id="textDebut" class="mr-2">Début:</p>
+                        <div id="@conteneurInputCompteur" class="col-10">
+                            <input type="text" value="@time" name="@name" id="@idList" class="dp" />
+                        </div>
+                    </div>
+
+                    @{compteur++;
+                        compteurListe++;
+                        time = Model.ListeDateTimes[compteurInverse];
+                        divTimeCompteur = "divTime" + compteur.ToString();
+                        conteneurInputCompteur = "ConteneurInput" + compteur.ToString();
+                        name = "ListeDateTimes[" + compteur.ToString() + "]";
+                        idList = "ListeDateTimes" + compteur.ToString();
+                    }
+
+
+                    <div id="@divTimeCompteur" class="conteneurDivInput marginSaufGauche">
+                        <p id="textFin" class="mr-2">Fin:</p>
+                        <div id="@conteneurInputCompteur" class="col-12">
+                            <input type="text" value="@time" name="@name" id="@idList" class="dp" />
+
+                            @if (compteurDePlageHoraire != 0)
+                            {
+                                if (compteurListe != 1)
+                                {
+                                    <a class="btnSupprimer  ml-5 invisible" onclick="SupprimerDPModif(@compteurDePlageHoraire)" id="@idBoutonSupprimer">X</a>
+                                }
+                                else
+                                {
+                                    <a class="btnSupprimer ml-5" onclick="SupprimerDPModif(@compteurDePlageHoraire)" id="@idBoutonSupprimer">X</a>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                compteur = compteur - 3;
+                divTimeCompteur = "divTime" + compteur.ToString();
+                conteneurInputCompteur = "ConteneurInput" + compteur.ToString();
+                name = "ListeDateTimes[" + compteur.ToString() + "]";
+                idList = "ListeDateTimes" + compteur.ToString();
+                compteurDePlageHoraire--;
+                idPlageHoraire = "plageHoraire" + compteurDePlageHoraire.ToString();
+
+                compteurInverse = compteurInverse - 2;
+
+            }
+        }
+    }
+
+    @if (Model.ListeDateTimes == null || Model.ListeDateTimes.Count == 0)
+    {
+        //Ce code est seulement utilisé dans le get
+        <div id="plageHoraire0" class="row col-12 plageHoraireNombre plageHoraireConteneurTout justify-content-center moitieHauteur">
+            <div id="divTime0" class="conteneurDivInput m-5 marginRight">
+                <p id="textDebut" class="mr-2">Début:</p>
+                <div id="ConteneurInput0" class="col-10">
+                    <input type="text" value="" name="ListeDateTimes[0]" id="ListeDateTimes0" class="dp" />
+                </div>
+            </div>
+
+            <div id="divTime1" class="conteneurDivInput marginSaufGauche">
+                <p id="textFin" class="mr-2">Fin:</p>
+                <div id="ConteneurInput1" class="col-12">
+                    <input type="text" value="" name="ListeDateTimes[1]" id="ListeDateTimes1" class="dp" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
